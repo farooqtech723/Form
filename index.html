@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Kontaktformular für Drohne112 – INTERSCHUTZ 2026. Nehmen Sie am Gewinnspiel teil und erfahren Sie mehr über unsere Drohnensysteme.">
+    <title>Kontakt | Drohne112.de – INTERSCHUTZ 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Top Bar with Regenerate Button -->
+    <header class="top-bar" style="padding: 10px 0;">
+        <div class="top-bar-inner">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <img src="https://www.drohne112.de/img/new-logo.svg" alt="Logo">
+                </div>
+            </div>
+            <button id="regenerateBtn" class="regenerate-btn" onclick="regenerateForm()">
+                <svg class="regenerate-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Regenerate
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge">01. – 06. Juni 2026 | Hannover</div>
+            <h1 class="hero-title">UNSER KENNENLERNEN AUF DER<br><span class="hero-highlight">INTERSCHUTZ 2026</span>
+            </h1>
+            <div class="hero-logos">
+                <div class="logo-icon">
+                    <img src="https://www.drohne112.de/img/new-logo.svg" alt="Logo">
+                </div>
+                <div class="hero-logo-divider"></div>
+                <div class="logo-icon">
+                    <img src="https://www.drohne112.de/img/Interschutz-Log.png" alt="Logo"
+                        style="width:120px; height:auto;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <main class="form-section">
+        <div class="form-container">
+            <!-- Progress Indicator -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="step-indicators" id="stepIndicators">
+                <div class="step-dot active" data-step="1"><span>1</span></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="2"><span>2</span></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="3"><span>3</span></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="4"><span>4</span></div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="5"><span>5</span></div>
+            </div>
+
+            <form id="drohneForm" novalidate>
+                <!-- STEP 1: Contact Details -->
+                <div class="form-step active" id="step1">
+                    <h2 class="step-title">DEINE Kontaktdaten</h2>
+                    <p class="step-subtitle">Bitte füllen Sie Ihre Kontaktdaten aus</p>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="Ihr vollständiger Name" required>
+                            <div class="field-error" id="nameError">Bitte geben Sie Ihren Namen ein</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="einheit">Einheit <span class="required">*</span></label>
+                            <input type="text" id="einheit" name="einheit" placeholder="Ihre Einheit / Organisation"
+                                required>
+                            <div class="field-error" id="einheitError">Bitte geben Sie Ihre Einheit ein</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-Mailadresse <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="ihre@email.de" required>
+                            <div class="field-error" id="emailError">Bitte geben Sie eine gültige E-Mail-Adresse ein
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefon">Telefonnummer <span class="optional-tag">Optional</span></label>
+                            <input type="tel" id="telefon" name="telefon" placeholder="+49 123 456789">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div></div>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+                            Weiter
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Drone Ownership -->
+                <div class="form-step" id="step2">
+                    <h2 class="step-title">Habt Ihr schon eine Drohne in der Einheit?</h2>
+                    <p class="step-subtitle">Wählen Sie eine Option aus</p>
+
+                    <div class="choice-cards">
+                        <div class="choice-card" id="choiceJa" onclick="selectDroneOwnership('ja')">
+                            <div class="choice-icon">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2" />
+                                    <path d="M14 24l7 7 13-13" stroke="currentColor" stroke-width="3"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <h3>Ja</h3>
+                            <p>Wir haben bereits eine Drohne</p>
+                        </div>
+                        <div class="choice-card" id="choiceNein" onclick="selectDroneOwnership('nein')">
+                            <div class="choice-icon">
+                                <svg viewBox="0 0 48 48" fill="none">
+                                    <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2" />
+                                    <path d="M16 16l16 16M32 16L16 32" stroke="currentColor" stroke-width="3"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <h3>Nein</h3>
+                            <p>Wir haben noch keine Drohne</p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
+                            </svg>
+                            Zurück
+                        </button>
+                        <button type="button" class="btn btn-primary" id="step2NextBtn" onclick="nextStep(2)" disabled>
+                            Weiter
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Current Drone (Only if Ja) -->
+                <div class="form-step" id="step3">
+                    <h2 class="step-title">Welche Drohne nutzt ihr aktuell?</h2>
+                    <p class="step-subtitle">Wählen Sie den Hersteller und das Modell aus</p>
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="droneManufacturer">Hersteller <span class="required">*</span></label>
+                            <div class="custom-select-wrapper">
+                                <select id="droneManufacturer" name="droneManufacturer"
+                                    onchange="onManufacturerChange()">
+                                    <option value="" disabled selected>Bitte auswählen...</option>
+                                    <option value="DIJ">DIJ</option>
+                                    <option value="Andere">Andere</option>
+                                </select>
+                                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M6 9l6 6 6-6" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- DIJ Model Dropdown -->
+                        <div class="form-group full-width" id="dijModelGroup" style="display:none;">
+                            <label for="dijModel">DIJ Modell <span class="required">*</span></label>
+                            <div class="custom-select-wrapper">
+                                <select id="dijModel" name="dijModel" onchange="onDijModelChange()">
+                                    <option value="" disabled selected>Modell auswählen...</option>
+                                    <option value="Mavic 2 Serie">Mavic 2 Serie</option>
+                                    <option value="Mavic 3T">Mavic 3T</option>
+                                    <option value="Matrice 4T">Matrice 4T</option>
+                                    <option value="Matrice 4TD">Matrice 4TD</option>
+                                    <option value="Matrice 30T">Matrice 30T</option>
+                                    <option value="Matrice 300">Matrice 300</option>
+                                    <option value="Matrice 350">Matrice 350</option>
+                                    <option value="Matrice 400">Matrice 400</option>
+                                    <option value="Anderes DIJ Modell">Anderes DIJ Modell</option>
+                                </select>
+                                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M6 9l6 6 6-6" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Custom DIJ Model Text Field -->
+                        <div class="form-group full-width" id="customDijModelGroup" style="display:none;">
+                            <label for="customDijModel">Anderes DIJ Modell <span class="required">*</span></label>
+                            <input type="text" id="customDijModel" name="customDijModel"
+                                placeholder="Bitte geben Sie das Modell ein">
+                        </div>
+
+                        <!-- Other Manufacturer Text Field -->
+                        <div class="form-group full-width" id="otherManufacturerGroup" style="display:none;">
+                            <label for="otherDrone">Welche Drohne? <span class="required">*</span></label>
+                            <input type="text" id="otherDrone" name="otherDrone"
+                                placeholder="Hersteller und Modell angeben">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
+                            </svg>
+                            Zurück
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">
+                            Weiter
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: System Interest (Multi-select) -->
+                <div class="form-step" id="step4">
+                    <h2 class="step-title">Für Welches System interessiert Ihr euch?</h2>
+                    <p class="step-subtitle">Mehrfachauswahl möglich – wählen Sie alle zutreffenden Optionen</p>
+
+                    <div class="checkbox-grid">
+                        <label class="checkbox-card" for="interest_m4t">
+                            <input type="checkbox" id="interest_m4t" name="interests" value="M4T">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>M4T</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_m4td">
+                            <input type="checkbox" id="interest_m4td" name="interests" value="M4TD">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>M4TD</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_m400">
+                            <input type="checkbox" id="interest_m400" name="interests" value="M400">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>M400</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_loeschdrohne">
+                            <input type="checkbox" id="interest_loeschdrohne" name="interests" value="Löschdrohne">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>Löschdrohne</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_dock3">
+                            <input type="checkbox" id="interest_dock3" name="interests" value="Dock3">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>Dock3</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_portal">
+                            <input type="checkbox" id="interest_portal" name="interests" value="Portal Im Einsatz">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>Portal „Im Einsatz"</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_ausbildung">
+                            <input type="checkbox" id="interest_ausbildung" name="interests"
+                                value="Ausbildung nach EGRED">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>Ausbildung nach EGRED</span>
+                            </div>
+                        </label>
+                        <label class="checkbox-card" for="interest_andere">
+                            <input type="checkbox" id="interest_andere" name="interests" value="Andere"
+                                onchange="toggleNotesField()">
+                            <div class="checkbox-card-inner">
+                                <div class="checkbox-indicator">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path d="M5 12l5 5L19 7" />
+                                    </svg>
+                                </div>
+                                <span>Andere <small>(siehe Notizfeld)</small></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Optional Notes -->
+                    <div class="form-group notes-group" id="notesGroup">
+                        <label for="notizen">Notizfeld <span class="optional-tag">Optional</span></label>
+                        <textarea id="notizen" name="notizen" rows="4"
+                            placeholder="Ihre Anmerkungen oder Wünsche..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(4)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
+                            </svg>
+                            Zurück
+                        </button>
+                        <button type="button" class="btn btn-primary btn-submit" onclick="submitForm()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                            </svg>
+                            Absenden
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Thank You -->
+                <div class="form-step" id="step5">
+                    <div class="success-container">
+                        <div class="success-icon-wrap">
+                            <svg class="success-icon" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="38" stroke="#10b981" stroke-width="3" />
+                                <path class="success-check" d="M22 40l12 12 24-24" stroke="#10b981" stroke-width="4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h2 class="success-title">Danke für die Teilnahme am Gewinnspiel!</h2>
+                        <p class="success-message">Wir haben Ihre Daten erfolgreich erhalten und werden uns in Kürze bei
+                            Ihnen melden. Wir freuen uns darauf, Sie auf der INTERSCHUTZ 2026 zu treffen!</p>
+                        <div class="success-details">
+                            <div class="success-detail-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                <span>01. – 06. Juni 2026</span>
+                            </div>
+                            <div class="success-detail-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                <span>Hannover, Deutschland</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Privacy Notice -->
+            <div class="privacy-notice" id="privacyNotice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <p>Die <a href="https://drohne112.de/datenschutz.html" target="_blank">Datenschutzerklärung</a> habe ich
+                    zur Kenntnis genommen und der Weiterverarbeitung meiner Daten zum Zwecke der Beantwortung meiner
+                    Anfrage stimme ich zu.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2026 Drohne112.de – Alle Rechte vorbehalten</p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Daten werden gesendet...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

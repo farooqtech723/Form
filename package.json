@@ -1,0 +1,18 @@
+{
+  "name": "drohne112-form",
+  "version": "1.0.0",
+  "description": "Multi-step contact form for Drohne112 INTERSCHUTZ 2026",
+  "main": "index.html",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "form",
+    "drohne112"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
