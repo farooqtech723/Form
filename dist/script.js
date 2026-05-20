@@ -404,3 +404,152 @@ function regenerateForm() {
 document.addEventListener('DOMContentLoaded', () => {
     showStep(1);
 });
+
+// =============================================
+// BUSINESS CARD SCANNER (OCR)
+// =============================================
+
+async function processBusinessCard(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const overlay = document.getElementById('scanningOverlay');
+    const statusText = document.getElementById('scanningStatus');
+    overlay.classList.add('active');
+    statusText.innerText = 'Bild wird vorbereitet...';
+
+    try {
+        statusText.innerText = 'Texterkennung läuft (kann einige Sekunden dauern)...';
+
+        // Ensure Tesseract is loaded
+        if (typeof Tesseract === 'undefined') {
+            throw new Error('Tesseract.js ist nicht geladen.');
+        }
+
+        // Preprocess image using canvas to improve OCR
+        const processedImage = await preprocessImageForOCR(file);
+
+        // Use German and English language models for better recognition of URLs and names
+        const worker = await Tesseract.createWorker('deu+eng');
+        const ret = await worker.recognize(processedImage);
+        const text = ret.data.text;
+        await worker.terminate();
+
+        console.log("OCR Result:\n", text);
+        statusText.innerText = 'Daten werden ausgewertet...';
+
+        await parseAndFillBusinessCard(text);
+
+    } catch (error) {
+        console.error('OCR Error:', error);
+        alert('Fehler beim Scannen der Visitenkarte. Bitte versuchen Sie es erneut oder geben Sie die Daten manuell ein.');
+    } finally {
+        overlay.classList.remove('active');
+        event.target.value = '';
+    }
+}
+
+function preprocessImageForOCR(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Resize if too large (improves speed and OCR quality)
+            const MAX_WIDTH = 1600;
+            let width = img.width;
+            let height = img.height;
+            if (width > MAX_WIDTH) {
+                height = Math.round(height * MAX_WIDTH / width);
+                width = MAX_WIDTH;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw original image
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert to grayscale to help Tesseract
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+                data[i] = avg;     // R
+                data[i + 1] = avg;   // G
+                data[i + 2] = avg;   // B
+            }
+            ctx.putImageData(imageData, 0, 0);
+
+            resolve(canvas);
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+    });
+}
+
+async function parseAndFillBusinessCard(text) {
+    const OCR_WEBHOOK_URL = 'https://bitautomationen.app.n8n.cloud/webhook/abc1e62b-64ea-4899-8617-f4bfaf28fafe';
+
+    const statusText = document.getElementById('scanningStatus');
+    if (statusText) statusText.innerText = 'KI analysiert die Daten...';
+
+    try {
+        const response = await fetch(OCR_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ rawText: text })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("OpenAI Parsed Data:", data);
+
+        // Fill Form Fields (assuming the webhook returns these standard keys)
+        if (data.email) {
+            document.getElementById('email').value = data.email;
+            if (typeof clearFieldError === 'function') clearFieldError('email', 'emailError');
+        }
+        if (data.telefon || data.phone) {
+            document.getElementById('telefon').value = data.telefon || data.phone;
+        }
+        if (data.name) {
+            document.getElementById('name').value = data.name;
+            if (typeof clearFieldError === 'function') clearFieldError('name', 'nameError');
+        }
+        if (data.einheit || data.company) {
+            document.getElementById('einheit').value = data.einheit || data.company;
+            if (typeof clearFieldError === 'function') clearFieldError('einheit', 'einheitError');
+        }
+
+        // Put extra parsed info into Notizen (Notes) field
+        let extraInfo = [];
+        if (data.adresse || data.address) extraInfo.push(`Adresse: ${data.adresse || data.address}`);
+        if (data.titel || data.title) extraInfo.push(`Position: ${data.titel || data.title}`);
+        if (data.website) extraInfo.push(`Website: ${data.website}`);
+        if (data.extra) extraInfo.push(`Weitere Infos: ${data.extra}`);
+
+        if (extraInfo.length > 0) {
+            const notizenEl = document.getElementById('notizen');
+            if (notizenEl) {
+                const currentNotizen = notizenEl.value;
+                const newNotizen = "--- Visitenkarten-Details ---\n" + extraInfo.join('\n') + "\n-----------------------------";
+                notizenEl.value = currentNotizen ? currentNotizen + "\n\n" + newNotizen : newNotizen;
+
+                // Show notes field visually if hidden
+                const notesGroup = document.getElementById('notesGroup');
+                if (notesGroup) notesGroup.style.display = 'block';
+            }
+        }
+
+    } catch (error) {
+        console.error('Webhook Error:', error);
+        alert('Fehler bei der KI-Analyse. Bitte überprüfen Sie den n8n Webhook oder füllen Sie die Felder manuell aus.');
+    }
+}

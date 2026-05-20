@@ -82,7 +82,8 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(251, 192, 45, 1);
-    padding: 0 24px;
+    padding: 0 40px;
+    transition: padding var(--transition-normal);
 }
 
 .top-bar-inner {
@@ -103,6 +104,13 @@ body {
 .logo-icon svg {
     width: 40px;
     height: 40px;
+}
+
+.logo-icon img {
+    height: 44px;
+    width: auto;
+    display: block;
+    transition: height var(--transition-normal);
 }
 
 .logo-icon circle {
@@ -1027,9 +1035,45 @@ textarea {
 }
 
 /* =============================================
-   RESPONSIVE
+   RESPONSIVE & MEDIA QUERIES
    ============================================= */
 
+/* Screen widths under 1100px - Fixes spacing and prevents edge-touching */
+@media (max-width: 1100px) {
+    .top-bar {
+        padding: 0 24px;
+    }
+
+    .top-bar-inner {
+        height: 72px;
+    }
+
+    .logo-icon img {
+        height: 40px;
+    }
+
+    .regenerate-btn {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+}
+
+/* Screen widths under 768px (Tablets) */
+@media (max-width: 768px) {
+    .top-bar {
+        padding: 0 16px;
+    }
+
+    .top-bar-inner {
+        height: 64px;
+    }
+
+    .logo-icon img {
+        height: 34px;
+    }
+}
+
+/* Screen widths under 640px (Small mobiles/tablets) */
 @media (max-width: 640px) {
     .form-container {
         padding: 28px 20px;
@@ -1102,19 +1146,52 @@ textarea {
     }
 
     .top-bar-inner {
-        height: 56px;
+        height: 58px;
     }
 
-    .logo-text {
-        font-size: 16px;
+    .logo-icon img {
+        height: 32px;
     }
 
     .regenerate-btn {
-        padding: 8px 16px;
-        font-size: 13px;
+        padding: 8px 14px;
+        font-size: 12px;
     }
 }
 
+/* Screen widths under 480px (Narrow mobile screens) */
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 0 12px;
+    }
+
+    .top-bar-inner {
+        height: 56px;
+    }
+
+    .logo-icon img {
+        height: 28px;
+    }
+
+    .regenerate-btn {
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        justify-content: center;
+        border-radius: var(--radius-md);
+    }
+
+    .regenerate-btn .btn-text {
+        display: none;
+    }
+
+    .regenerate-icon {
+        margin: 0;
+    }
+}
+
+/* Screen widths under 400px (Extra small mobiles) */
 @media (max-width: 400px) {
     .form-container {
         padding: 20px 16px;
