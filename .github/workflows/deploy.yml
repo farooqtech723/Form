@@ -8,20 +8,21 @@ on:
 
 jobs:
   ftp-deploy:
-    name: Deploy via FTPS
+    name: Deploy via FTP
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: 📂 Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to FTP server
+      - name: 🚀 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
           port: 21
+          protocol: ftp
           server-dir: /public_html/ressourcen/test-deploy/
           local-dir: ./
           exclude: |
